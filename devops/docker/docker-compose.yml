@@ -1,0 +1,19 @@
+version: '3'
+
+volumes:
+
+  product-ms-data: {}
+
+services:
+
+  product-ms-postgres:
+    image: postgres:11.5-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: product-ms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin@123
+    ports:
+      - 5432:5432
+    volumes:
+      - product-ms-data:/var/lib/postgresql
