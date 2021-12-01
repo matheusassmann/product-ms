@@ -1,29 +1,32 @@
 package br.com.productms.service;
 
+import br.com.productms.domain.dto.request.ProductRequest;
 import br.com.productms.domain.model.Product;
 import br.com.productms.repository.ProductRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class ProductService {
 
     @Autowired
-    ProductRepository repository;
+    private ProductRepository repository;
 
-    public Optional<Product> findById(UUID id) {
-        return repository.findById(id);
+    public Product findById(UUID id) {
+       Product obj = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id, "Product not found!"));
+       return obj;
     }
 
     public List<Product> findAll() {
         return repository.findAll();
     }
 
-    public Product save(Product product) {
-        product = repository.save(product);
-        return product;
+    public Product save(ProductRequest productRequest) {
+        return repository.save(Product.from(productRequest));
     }
 
     public Product update(Product product) {
@@ -32,7 +35,6 @@ public class ProductService {
     }
 
     public void delete(UUID id) {
-        findById(id);
         repository.deleteById(id);
     }
 }

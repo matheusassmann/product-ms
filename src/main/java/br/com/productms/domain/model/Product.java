@@ -39,7 +39,7 @@ public class Product {
                 .build();
     }
 
-    public static ProductResponse of(Product response) {
+    public static ProductResponse toResponse(Product response) {
         return ProductResponse.builder()
                 .id(response.getId())
                 .name(response.getName())
