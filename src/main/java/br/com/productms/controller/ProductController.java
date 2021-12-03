@@ -6,11 +6,11 @@ import br.com.productms.domain.model.Product;
 import br.com.productms.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -26,13 +26,13 @@ public class ProductController {
     public ResponseEntity<ProductResponse> insert(@RequestBody @Valid ProductRequest productRequest, UriComponentsBuilder uriBuilder) {
         Product product = service.save(productRequest);
         URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
-        return ResponseEntity.created(uri).body(Product.toResponse(product)); //TODO retornar 201 E o ID gerado
+        return ResponseEntity.created(uri).body(Product.toResponse(product));
     }
 
     @GetMapping()
-    public ResponseEntity<ProductResponse> findAll() {
+    public ResponseEntity<List<ProductResponse>> findAll() {
         List<Product> products = service.findAll();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Product.toResponse(products));
     }
 
     @GetMapping("/{id}")
@@ -42,26 +42,24 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(@RequestBody @Validated ProductRequest product) {
-        service.update(Product.from(product));
-        return ResponseEntity.noContent().build(); //TODO
+    public ResponseEntity<ProductResponse> update(@RequestBody @Valid ProductRequest productRequest, @PathVariable UUID id, UriComponentsBuilder uriBuilder) {
+        Product obj = service.update(Product.from(productRequest), id);
+        URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productRequest.getId()).toUri();
+        return ResponseEntity.created(uri).body(Product.toResponse(obj));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(UUID id) {
-        try {
-            service.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<String> search(@RequestParam String description, @RequestParam String name){
-        return ResponseEntity.ok(description);
+    public ResponseEntity<List<ProductResponse>> search(@RequestParam(name = "q") String nameOrDescription,
+                                                        @RequestParam(name = "min_price") BigDecimal minPrice,
+                                                        @RequestParam(name = "max_price") BigDecimal maxPrice) {
+        List<Product> listProduct = service.search(nameOrDescription, minPrice, maxPrice);
+        return ResponseEntity.ok(Product.toResponse(listProduct));
     }
-
 
 }

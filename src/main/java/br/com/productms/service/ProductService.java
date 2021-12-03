@@ -7,6 +7,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,12 +30,18 @@ public class ProductService {
         return repository.save(Product.from(productRequest));
     }
 
-    public Product update(Product product) {
-        findById(product.getId());
+    public Product update(Product product, UUID id) {
+        findById(id);
+        product.setId(id);
         return repository.save(product);
     }
 
     public void delete(UUID id) {
+        findById(id);
         repository.deleteById(id);
+    }
+
+    public List<Product> search(String nameOrDescription, BigDecimal minPrice, BigDecimal maxPrice) {
+        return repository.search(nameOrDescription, minPrice, maxPrice);
     }
 }

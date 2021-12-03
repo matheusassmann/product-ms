@@ -24,5 +24,4 @@ public class RestValidationExceptionHandler extends ResponseEntityExceptionHandl
         }
         return ResponseEntity.badRequest().body(ApiError.builder().statusCode(HttpStatus.BAD_REQUEST.value()).message(message.toString()).build());
     }
-
 }

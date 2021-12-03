@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +23,7 @@ public class Product {
     @Id
     @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
     @GeneratedValue(generator = "UUIDGenerator")
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -39,12 +42,18 @@ public class Product {
                 .build();
     }
 
-    public static ProductResponse toResponse(Product response) {
+    public static ProductResponse toResponse(Product product) {
         return ProductResponse.builder()
-                .id(response.getId())
-                .name(response.getName())
-                .description(response.getDescription())
-                .price(response.getPrice())
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
                 .build();
+    }
+
+    public static List<ProductResponse> toResponse(List<Product> products) {
+        List<ProductResponse> listProducts = new ArrayList<>();
+        products.forEach(product -> listProducts.add(Product.toResponse(product)));
+        return listProducts;
     }
 }
