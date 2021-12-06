@@ -1,0 +1,37 @@
+version: '3'
+
+volumes:
+
+  product-ms-data: { }
+
+services:
+
+  product-ms-postgres:
+    image: postgres:11.5-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: product-ms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin@123
+    ports:
+      - 5432:5432
+    volumes:
+      - product-ms-data:/var/lib/postgresql
+
+  product-ms:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: uol/product-ms
+    container_name: uol-product-ms
+    ports:
+      - "9999:9999"
+    depends_on:
+      - "product-ms-postgres"
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24

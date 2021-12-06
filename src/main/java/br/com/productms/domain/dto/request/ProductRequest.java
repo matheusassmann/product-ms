@@ -1,16 +1,14 @@
 package br.com.productms.domain.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@AllArgsConstructor
 public class ProductRequest {
 
     private UUID id;
