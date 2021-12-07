@@ -5,6 +5,15 @@ Projeto desenvolvido como parte do processo seletivo da Compass UOL, requisitos 
 
 ## Como executar?
 
+#### Tecnologias utilizadas:
+Para o desenvolvimento desta aplicação, foram utilizadas as seguintes tecnologias:
+- Java 11
+- Maven
+- Docker
+- JPQL
+- Spring Boot
+- JPA
+
 #### Ferramentas necessárias:
 - [Docker for Windows](https://docs.docker.com/desktop/windows/install/ "Download Docker").
 - [Postman](https://www.postman.com/downloads/ "Download Postman")

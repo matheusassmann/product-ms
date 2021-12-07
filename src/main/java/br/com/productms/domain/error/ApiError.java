@@ -11,7 +11,7 @@ import lombok.*;
 public class ApiError {
 
     @JsonProperty("status_code")
-    private Integer statusCode; //TODO Snakecase
+    private Integer statusCode;
 
     private String message;
 }
